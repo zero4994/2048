@@ -26,7 +26,7 @@ function fillTable ($gameTable){
 function print_matrix ($gameTable){
     foreach($gameTable as $row) {
         foreach ($row as $column) {
-            echo $column." ";
+            echo $column."&emsp;&emsp;";
         }//foreach
         echo "<br>";
     }//foreach
@@ -116,30 +116,43 @@ function sumCellUp ($gameTable){
 }//
 
 function sortZeroDown ($gameTable){
-    for($column=0; $column<4; $column++) {
+    for($column=3; $column>=0; $column--) {
         $temp = array(0,0,0,0);
-        $counter = 0;
-        for($row=0; $row<4; $row++){
+        $counter = 3;
+        for($row=3; $row>=0; $row--){
             if($gameTable[$row][$column]>0) {
                 $temp[$counter] = $gameTable[$row][$column];
-                $counter ++;
+                $counter--;
             }//if
         }//for
 
-        if($counter!=0){
-            for($i=0; $i<count($temp); $i++){
+        if($counter!=3){
+            for($i=3; $i>=0; $i--){
                 $gameTable[$i][$column] = $temp[$i];
             }
         }//if
     }//for
     return $gameTable;
-}
+}//
+
+function sumCellDown ($gameTable){
+    for($column=3; $column>=0; $column--) {
+        for($row=3; $row>=0; $row--){
+            if(($row-1>=0) && ($gameTable[$row][$column] == $gameTable[$row-1][$column])) {
+                $gameTable[$row][$column] +=  $gameTable[$row-1][$column];
+                $gameTable[$row-1][$column] = 0;
+                $row--;
+            }//if
+        }//for
+    }//for
+    return $gameTable;
+}//
 
 $gameTable = fillTable($gameTable);
 print_matrix($gameTable);
 echo "<br><br>";
 $flag =0;
-while ($flag<3){
+/*while ($flag<3){
     $random = rand(1,3);
     if($random == 1) { //Right
         echo "<br><br>Right<br>";
@@ -166,9 +179,18 @@ while ($flag<3){
         $gameTable = sumCellUp($gameTable);
         /*echo "<br><br>";
         print_matrix($gameTable);
-        echo "<br><br>";*/
+        echo "<br><br>";* /
         $gameTable = sortZeroUp($gameTable);
         print_matrix($gameTable);
     }//else if
     $flag++;
-}//while
+}//while*/
+
+$gameTable = sortZeroDown($gameTable);
+print_matrix($gameTable);
+echo "<br><br>";
+$gameTable = sumCellDown($gameTable);
+print_matrix($gameTable);
+echo "<br><br>";
+$gameTable = sortZeroDown($gameTable);
+print_matrix($gameTable);
