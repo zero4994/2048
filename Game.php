@@ -6,7 +6,7 @@
 <body>
 <p>
     <form action="Index.php" method="GET">
-        <input type="submit" name="submit" value="Return">
+        <input type="submit" name="submit" value="Return"><br><br>
     </form>
     <?php
     $gameTable = array([0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]);
@@ -174,48 +174,54 @@
 
     if(isset($_REQUEST['submit'])){
         $m = (int)$_REQUEST['m'];
-        echo $m."<br>";
-        if (is_int($m) && $m >=1 && $m<=100000) {
+        if (preg_match('/[^a-z]/i', $_REQUEST['m']) && $m >=1 && $m<=100000) {
+            echo "Amount of movements: ".$m."<br>";
             $gameTable = fillTable($gameTable);
             echo "Original<br>";
             print_matrix($gameTable);
-            echo "<br><br>";
             $flag =0;
+            $index=1;
+            while ($flag<$m){
+                $random = rand(1,4);
+                $word;
+                if($random == 1) { //Right
+                    echo "<br><br>$index) Right<br>";
+                    $word = "right";
+                } else if ($random == 2){ //Left
+                    echo "<br><br>$index) Left<br>";
+                    $word = "left";
+                } else if($random == 3){ //Up
+                    echo "<br><br>$index) Up<br>";
+                    $word = "up";
+                } else if ($random == 4){//Down
+                    echo "<br><br>$index) Down<br>";
+                    $word = "down";
+                }//else if
+
+                if ("right" == $word || "down" == $word){
+                    $gameTable = sortZeros($gameTable, 3,0,-1, $word);
+                    $gameTable = sumCell($gameTable,3,0,-1, $word);
+                    $gameTable = sortZeros($gameTable, 3,0,-1, $word);
+                } else {
+                    $gameTable = sortZeros($gameTable, 0,4,1,$word);
+                    $gameTable = sumCell($gameTable, 0,4,1, $word);
+                    $gameTable = sortZeros($gameTable,0,4,1, $word);
+                }//else
+                $gameTable = addCell($gameTable);
+                print_matrix($gameTable);
+                $flag++;
+                $index++;
+            }//while
         } else {
-            echo "Value not between 1>=M<=10^5 or float";
+            echo "Value not between 1>=M<=10^5 or float or letter";
         }//else
     }//if
-    /*while ($flag<5){
-        $random = rand(1,4);
-        $word;
-        if($random == 1) { //Right
-            echo "<br><br>Right<br>";
-            $word = "right";
-        } else if ($random == 2){ //Left
-            echo "<br><br>Left<br>";
-            $word = "left";
-        } else if($random == 3){ //Up
-            echo "<br><br>Up<br>";
-            $word = "up";
-        } else if ($random == 4){//Down
-            echo "<br><br>Down<br>";
-            $word = "down";
-        }//else if
-
-        if ("right" == $word || "down" == $word){
-            $gameTable = sortZeros($gameTable, 3,0,-1, $word);
-            $gameTable = sumCell($gameTable,3,0,-1, $word);
-            $gameTable = sortZeros($gameTable, 3,0,-1, $word);
-        } else {
-            $gameTable = sortZeros($gameTable, 0,4,1,$word);
-            $gameTable = sumCell($gameTable, 0,4,1, $word);
-            $gameTable = sortZeros($gameTable,0,4,1, $word);
-        }//else
-        $gameTable = addCell($gameTable);
-        print_matrix($gameTable);
-        $flag++;
-    }//while*/
     ?>
+
+    <!--<form action="Game.php" method="GET">
+        <input type="submit" name="up" value="UP">
+        <input type="submit" name="down" value="DOWN">
+    </form>-->
 </p>
 </body>
 </html>
