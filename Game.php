@@ -63,7 +63,7 @@ function sumCell ($gameTable, $initialCondition, $finalCondition, $operand, $dir
     for($row=0; $row<count($gameTable); $row++) {
         if("right" == $direction){
             for($column=$initialCondition; $column>=$finalCondition; $column+=$operand){
-                if($gameTable[$row][$column] == $gameTable[$row][$column-1]) {
+                if(($column+$operand>=$finalCondition) && ($gameTable[$row][$column] == $gameTable[$row][$column-1])) {
                     $gameTable[$row][$column] +=  $gameTable[$row][$column-1];
                     $gameTable[$row][$column-1] = 0;
                     $column+=$operand;
@@ -71,7 +71,7 @@ function sumCell ($gameTable, $initialCondition, $finalCondition, $operand, $dir
             }//for
         } else if("left" == $direction){
             for($column=$initialCondition; $column<$finalCondition; $column++){
-                if($gameTable[$row][$column] == $gameTable[$row][$column+1]) {
+                if(($column+$operand<$finalCondition) && ($gameTable[$row][$column] == $gameTable[$row][$column+1])) {
                     $gameTable[$row][$column] +=  $gameTable[$row][$column+1];
                     $gameTable[$row][$column+=$operand] = 0;
                     $column++;
@@ -152,8 +152,8 @@ $gameTable = fillTable($gameTable);
 print_matrix($gameTable);
 echo "<br><br>";
 $flag =0;
-/*while ($flag<3){
-    $random = rand(1,3);
+while ($flag<5){
+    $random = rand(1,4);
     if($random == 1) { //Right
         echo "<br><br>Right<br>";
         $gameTable = sortZeros($gameTable, 3,0,-1, "right");
@@ -163,7 +163,7 @@ $flag =0;
         //print_matrix($gameTable);
         //echo "<br><br>";
         $gameTable = sortZeros($gameTable, 3,0,-1, "right");
-        print_matrix($gameTable);
+        //print_matrix($gameTable);
     } else if ($random == 2){ //Left
         echo "<br><br>Left<br>";
         $gameTable = sortZeros($gameTable, 0,4,1, "left");
@@ -171,7 +171,7 @@ $flag =0;
         //echo "<br><br>";
         $gameTable = sumCell($gameTable,0,4,1, "left");
         $gameTable = sortZeros($gameTable, 0,4,1, "left");
-        print_matrix($gameTable);
+        //print_matrix($gameTable);
     } else if($random == 3){ //Up
         echo "<br><br>Up<br>";
         $gameTable = sortZeroUp($gameTable);
@@ -179,18 +179,20 @@ $flag =0;
         $gameTable = sumCellUp($gameTable);
         /*echo "<br><br>";
         print_matrix($gameTable);
-        echo "<br><br>";* /
+        echo "<br><br>";*/
         $gameTable = sortZeroUp($gameTable);
-        print_matrix($gameTable);
+        //print_matrix($gameTable);
+    } else if ($random == 4){//Down
+        echo "<br><br>Down<br>";
+        $gameTable = sortZeroDown($gameTable);
+        //print_matrix($gameTable);
+        //echo "<br><br>";
+        $gameTable = sumCellDown($gameTable);
+        //print_matrix($gameTable);
+        //echo "<br><br>";
+        $gameTable = sortZeroDown($gameTable);
+        //print_matrix($gameTable);
     }//else if
+    print_matrix($gameTable);
     $flag++;
-}//while*/
-
-$gameTable = sortZeroDown($gameTable);
-print_matrix($gameTable);
-echo "<br><br>";
-$gameTable = sumCellDown($gameTable);
-print_matrix($gameTable);
-echo "<br><br>";
-$gameTable = sortZeroDown($gameTable);
-print_matrix($gameTable);
+}//while
